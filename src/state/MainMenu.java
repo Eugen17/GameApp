@@ -9,17 +9,14 @@ import com.jme3.scene.Node;
 
 public class MainMenu extends AbstractAppState {
     
-    private final Node rootNode;
+    private Node rootNode;
     private final Node localRootNode = new Node("Main Menu");
-    
-    public MainMenu(SimpleApplication app){
-        rootNode = app.getRootNode();
-    }
     
     @Override
     public void initialize(AppStateManager stateManager, Application app){
         super.initialize(stateManager, app);
         
+        rootNode = ((SimpleApplication)app).getRootNode();
         rootNode.attachChild(localRootNode);
     }
     

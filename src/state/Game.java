@@ -20,28 +20,27 @@ import util.Tile;
 
 public class Game extends AbstractAppState implements ActionListener {
 
-    private final Node rootNode;
+    private Node rootNode;
     private final Node localNode = new Node("Game");
     private final Node pauseNode = new Node("Pause");
-    private final Camera cam;
+    private Camera cam;
 
     private enum Actions {
         up, right, down, left, escape
     };
+    
+    private final Maze maze = new Maze(31, 31);
     private Player player;
-
-    public Game(SimpleApplication app) {
-        rootNode = app.getRootNode();
-        cam = app.getCamera();
-    }
-
+    
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
 
+        rootNode = ((SimpleApplication)app).getRootNode();
+        cam = app.getCamera();
+
         rootNode.attachChild(localNode);
 
-        Maze maze = new Maze(31, 31);
         maze.Generate(20);
 
         Material wall = new Material(app.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");

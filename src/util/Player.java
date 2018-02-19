@@ -32,34 +32,32 @@ public class Player {
     public Vector3f getPosition() {
         return new Vector3f(x, y, 50);
     }
-    
+
     public void Step(String dir) {
         switch (dir.charAt(0)) {
             case 'u':
-                if(maze.getTile(x, y + 1) == Tile.unlitAltar)
-                    maze.Light(x, y + 1);
-                if(maze.getTile(x, y + 1) == Tile.pass)
-                    y++;
+                steputil(x, y + 1);
                 break;
             case 'r':
-                if(maze.getTile(x + 1, y) == Tile.unlitAltar)
-                    maze.Light(x + 1, y);
-                if(maze.getTile(x + 1, y) == Tile.pass)
-                    x++;
+                steputil(x + 1, y);
                 break;
             case 'd':
-                if(maze.getTile(x, y - 1) == Tile.unlitAltar)
-                    maze.Light(x, y - 1);
-                if(maze.getTile(x, y - 1) == Tile.pass)
-                    y--;
+                steputil(x, y - 1);
                 break;
             case 'l':
-                if(maze.getTile(x - 1, y) == Tile.unlitAltar)
-                    maze.Light(x - 1, y);
-                if(maze.getTile(x - 1, y) == Tile.pass)
-                    x--;
+                steputil(x - 1, y);
                 break;
         }
         geom.setLocalTranslation(x, y, 1);
+    }
+    
+    private void steputil(int x, int y) {
+        if (maze.getTile(x, y) == Tile.unlitAltar) {
+            maze.Light(x, y);
+        }
+        if (maze.getTile(x, y) == Tile.pass) {
+            this.x = x;
+            this.y = y;
+        }
     }
 }
