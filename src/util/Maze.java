@@ -1,20 +1,31 @@
 package util;
 
+import com.jme3.material.Material;
+import com.jme3.scene.Geometry;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Maze {
     private final ArrayList<Tile> content = new ArrayList();
-    private int height, width, exitX, exitY, altars;
-    private boolean sealed = true;
+    public final ArrayList<Geometry> geoms = new ArrayList();
+    public Material lit;
+    private final int height, width, exitX, exitY;
+    private int altars;
+    private boolean sealed;
     
     public Maze(int width, int height){
+        this.sealed = true;
         this.width = width;
         this.height = height;
+        
+        Random rand = new Random();
+        exitX = 2*rand.nextInt(width/2)+1;
+        exitY = 2*rand.nextInt(height/2)+1;
         
         for(int i = 0; i < height; i++)
             for(int j = 0; j < width; j++){
                 content.add(Tile.wall);
+                geoms.add(new Geometry());
             }
     }
     
@@ -44,25 +55,31 @@ public class Maze {
             
             for(int i = y-rHeight/2; i <= y+rHeight/2; i++)
                 for(int j = x-rWidth/2; j <= x+rWidth/2; j++)
-                    content.set(i*width+j, Tile.pass);
+                    content.set(i*width+j, Tile.litAltar);
             content.set(y*width+x, Tile.unlitAltar);
             this.altars++;
             switch(rand.nextInt(4)){
                 case 0:
-                    content.set((y-rHeight/2+2*rand.nextInt(rHeight/2))*width + x+rWidth/2+1, Tile.pass);
+                    content.set((y-rHeight/2+2*rand.nextInt(rHeight/2))*width + x+rWidth/2+1, Tile.litAltar);
                     break;
                 case 1:
-                    content.set((y-rHeight/2+2*rand.nextInt(rHeight/2))*width + x-rWidth/2-1, Tile.pass);
+                    content.set((y-rHeight/2+2*rand.nextInt(rHeight/2))*width + x-rWidth/2-1, Tile.litAltar);
                     break;
                 case 2:
-                    content.set((y+rHeight/2+1)*width + x-rWidth/2+2*rand.nextInt(rWidth/2), Tile.pass);
+                    content.set((y+rHeight/2+1)*width + x-rWidth/2+2*rand.nextInt(rWidth/2), Tile.litAltar);
                     break;
                 case 3:
-                    content.set((y-rHeight/2-1)*width + x-rWidth/2+2*rand.nextInt(rWidth/2), Tile.pass);
+                    content.set((y-rHeight/2-1)*width + x-rWidth/2+2*rand.nextInt(rWidth/2), Tile.litAltar);
                     break;
             }
         }
+        
         Generate();
+        
+        for (int i = 0; i < height; i++)
+            for (int j = 0; j < width; j++)
+                if (content.get(i*width + j) == Tile.litAltar)
+                    content.set(i*width + j, Tile.pass);
     }
     
     public void Generate(){
@@ -82,11 +99,11 @@ public class Maze {
             (x == width-2 || content.get(y*width+x+2) != Tile.wall) &&
             (y == height-2 || content.get((y+2)*width+x) != Tile.wall) &&
             (x == 1 || content.get(y*width+x-2) != Tile.wall)){
-                x = 2*rand.nextInt(width/2-1)+1;
-                y = 2*rand.nextInt(height/2-1)+1;
+                x = 2*rand.nextInt(width/2)+1;
+                y = 2*rand.nextInt(height/2)+1;
                 while(content.get(y*width+x) != Tile.pass){
-                    x = 2*rand.nextInt(width/2-1)+1;
-                    y = 2*rand.nextInt(height/2-1)+1;
+                    x = 2*rand.nextInt(width/2)+1;
+                    y = 2*rand.nextInt(height/2)+1;
              
                 }
             }
@@ -130,7 +147,6 @@ public class Maze {
             for(int j = 1; j < width; j+=2){
                 ended = ended && (content.get(i*width+j) != Tile.wall);
             }
-        print();
         return ended;
     }
     
@@ -138,10 +154,18 @@ public class Maze {
     public int getHeight(){return height;}
     public boolean isSealed(){return sealed;}
     public Tile getTile(int x, int y){return content.get(y*width+x);}
-    public void Light(int x, int y){content.set(y*width+x, Tile.litAltar);}
+    public Geometry getGeom(int x, int y){return geoms.get(y*width+x);}
+    public void setGeom(int x, int y, Geometry g){geoms.set(y*width+x, g);}
+    
+    public void Light(int x, int y){
+        content.set(y*width+x, Tile.litAltar);
+        geoms.get(y*width+x).setMaterial(lit);
+        if (--altars == 0)
+            sealed = false;
+    }
     
     public void print(){
-        for(int i = 0; i < height; i++){
+        for(int i = height-1; i > -1; i--){
             for(int j = 0; j < width; j++)
                 System.out.print(content.get(i*width+j)+" ");
             System.out.println();

@@ -1,49 +1,65 @@
 package util;
 
+import com.jme3.material.Material;
+import com.jme3.math.Vector3f;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.shape.Quad;
+import java.util.Random;
+
 public class Player {
-   private int x, y;
-   private final Maze maze;
-   
-   public Player(int x, int y, Maze maze){
-       this.x = x;
-       this.y = y;
-       this.maze = maze;
-   }
-   
-   private boolean isPass(String dir, Maze maze){
-       switch(dir.charAt(0)){
-           case 'u': return maze.getTile(x, y-1) == Tile.pass;
-           case 'r': return maze.getTile(x+1, y) == Tile.pass;
-           case 'd': return maze.getTile(x, y+1) == Tile.pass;
-           case 'l': return maze.getTile(x-1, y) == Tile.pass;
-           default: return false;
-       }
-   }
-   
-   private boolean isAltar(String dir, Maze maze){
-       switch(dir.charAt(0)){
-           case 'u': return maze.getTile(x, y-1) == Tile.unlitAltar;
-           case 'r': return maze.getTile(x+1, y) == Tile.unlitAltar;
-           case 'd': return maze.getTile(x, y+1) == Tile.unlitAltar;
-           case 'l': return maze.getTile(x-1, y) == Tile.unlitAltar;
-           default: return false;
-       }
-   }
-   
-   public void Step(String dir){
-       if(isPass(dir, maze))
-           switch(dir.charAt(0)){
-               case 'u': y--;
-               case 'r': x++;
-               case 'd': y++;
-               case 'l': x--;
-           }
-       if(isAltar(dir, maze))
-           switch(dir.charAt(0)){
-               case 'u': maze.Light(x, y-1);
-               case 'r': maze.Light(x+1, y);
-               case 'd': maze.Light(x, y+1);
-               case 'l': maze.Light(x-1, y);
-           }
-   }
+
+    private int x, y;
+    private final Maze maze;
+    private final Geometry geom = new Geometry("Box", new Quad(1, 1));
+
+    public Player(Maze maze, Material mat) {
+        this.maze = maze;
+        x = 0;
+        y = 0;
+        Random rand = new Random();
+        while (maze.getTile(x, y) != Tile.pass) {
+            x = rand.nextInt(maze.getWidth());
+            y = rand.nextInt(maze.getHeight());
+        }
+        geom.setMaterial(mat);
+        geom.setLocalTranslation(x, y, 1);
+    }
+
+    public Geometry getGeom() {
+        return geom;
+    }
+
+    public Vector3f getPosition() {
+        return new Vector3f(x, y, 50);
+    }
+    
+    public void Step(String dir) {
+        switch (dir.charAt(0)) {
+            case 'u':
+                if(maze.getTile(x, y + 1) == Tile.unlitAltar)
+                    maze.Light(x, y + 1);
+                if(maze.getTile(x, y + 1) == Tile.pass)
+                    y++;
+                break;
+            case 'r':
+                if(maze.getTile(x + 1, y) == Tile.unlitAltar)
+                    maze.Light(x + 1, y);
+                if(maze.getTile(x + 1, y) == Tile.pass)
+                    x++;
+                break;
+            case 'd':
+                if(maze.getTile(x, y - 1) == Tile.unlitAltar)
+                    maze.Light(x, y - 1);
+                if(maze.getTile(x, y - 1) == Tile.pass)
+                    y--;
+                break;
+            case 'l':
+                if(maze.getTile(x - 1, y) == Tile.unlitAltar)
+                    maze.Light(x - 1, y);
+                if(maze.getTile(x - 1, y) == Tile.pass)
+                    x--;
+                break;
+        }
+        geom.setLocalTranslation(x, y, 1);
+    }
 }

@@ -4,6 +4,7 @@ import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AppStateManager;
+import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
 
 public class MainMenu extends AbstractAppState {
@@ -29,4 +30,13 @@ public class MainMenu extends AbstractAppState {
         super.cleanup();
     }
     
+    @Override
+    public void update(float dt){
+        
+    }
+    
+    @Override
+    public void render(RenderManager rm){
+        
+    }
 }
