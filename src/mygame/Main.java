@@ -19,6 +19,5 @@ public class Main extends SimpleApplication {
     @Override
     public void simpleInitApp() {
         Game game = new Game();
-        game.initialize(stateManager, this);
     }
 }

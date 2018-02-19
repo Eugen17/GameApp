@@ -10,7 +10,6 @@ import com.jme3.input.controls.KeyTrigger;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.renderer.Camera;
-import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Quad;
@@ -24,6 +23,9 @@ public class Game extends AbstractAppState implements ActionListener {
     private final Node localNode = new Node("Game");
     private final Node pauseNode = new Node("Pause");
     private Camera cam;
+    private String name = "";
+    private boolean keyPressed = false;
+    private float time = 0;
 
     private enum Actions {
         up, right, down, left, escape
@@ -101,22 +103,22 @@ public class Game extends AbstractAppState implements ActionListener {
 
     @Override
     public void update(float dt) {
+        time += dt;
+        
+        if (time > 0.1) {
+            time -= 0.1;
 
+            if (!name.equals(Actions.escape.name()) && keyPressed) {
+                player.Step(name);
+                player.getGeom().setLocalTranslation(player.getPosition().x, player.getPosition().y, 1);
+                cam.setLocation(player.getPosition());
+            }
+        }
     }
-
-    @Override
-    public void render(RenderManager rm) {
-
-    }
-
+    
     @Override
     public void onAction(String name, boolean keyPressed, float tpf) {
-        cam.setLocation(player.getPosition());
-        if (!name.equals(Actions.escape.name()) && keyPressed) {
-            player.Step(name);
-            player.getGeom().setLocalTranslation(player.getPosition().x, player.getPosition().y, 1);
-        } else if (keyPressed) {
-            localNode.attachChild(pauseNode);
-        }
+        this.name = name;
+        this.keyPressed = keyPressed;
     }
 }
