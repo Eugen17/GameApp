@@ -29,35 +29,18 @@ public class Player {
         return geom;
     }
 
-    public Vector3f getPosition() {
+    public Vector3f getLocation() {
         return new Vector3f(x, y, 50);
     }
 
-    public void Step(String dir) {
-        switch (dir.charAt(0)) {
-            case 'u':
-                steputil(x, y + 1);
-                break;
-            case 'r':
-                steputil(x + 1, y);
-                break;
-            case 'd':
-                steputil(x, y - 1);
-                break;
-            case 'l':
-                steputil(x - 1, y);
-                break;
+    public void Step(int x, int y) {
+        if (maze.getTile(this.x + x, this.y + y) == Tile.unlitAltar) {
+            maze.Light(this.x + x, this.y + y);
         }
-        geom.setLocalTranslation(x, y, 1);
-    }
-    
-    private void steputil(int x, int y) {
-        if (maze.getTile(x, y) == Tile.unlitAltar) {
-            maze.Light(x, y);
-        }
-        if (maze.getTile(x, y) == Tile.pass) {
-            this.x = x;
-            this.y = y;
+        if (maze.getTile(this.x + x, this.y + y) == Tile.pass) {
+            this.x += x;
+            this.y += y;
+            geom.setLocalTranslation(this.x, this.y, 1);
         }
     }
 }
