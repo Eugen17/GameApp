@@ -9,4 +9,5 @@ allprojects{
 
 dependencies {
 	compile 'com.github.jMonkeyEngine:jmonkeyengine:v3.2.1-stable'
+    compile 'mysql:mysql-connector-java'
 }
