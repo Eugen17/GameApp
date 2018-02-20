@@ -11,6 +11,8 @@ public class Player {
     private int x, y;
     private final Maze maze;
     private final Geometry geom = new Geometry("Box", new Quad(1, 1));
+    private float stepTime = 0;
+    private final float stepTimeThr = 0.1f;
 
     public Player(Maze maze, Material mat) {
         this.maze = maze;
@@ -32,8 +34,18 @@ public class Player {
     public Vector3f getLocation() {
         return new Vector3f(x, y, 50);
     }
+    
+    public boolean isTime() {
+        return stepTime <= 0;
+    }
+    
+    public void updateTime(float tpf){
+        if (stepTime > 0) 
+            stepTime -= tpf;
+    }
 
     public void Step(int x, int y) {
+        stepTime = stepTimeThr;
         if (maze.getTile(this.x + x, this.y + y) == Tile.unlitAltar) {
             maze.Light(this.x + x, this.y + y);
         }
