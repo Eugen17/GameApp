@@ -7,12 +7,13 @@ import DAO.*;
 
 public class Main extends SimpleApplication {
 
+    public static Main app = new Main();
+    
     public Main(){
         super(new Game());
     }
     
     public static void main(String[] args) {
-        Main app = new Main();
         app.setShowSettings(false);
         app.start();
     }

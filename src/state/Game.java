@@ -17,6 +17,9 @@ import java.util.EnumMap;
 import util.Maze;
 import util.Player;
 import util.Tile;
+import DAO.Session;
+import java.util.Date;
+import java.time.LocalDate;
 
 public class Game extends AbstractAppState {
 
@@ -27,6 +30,7 @@ public class Game extends AbstractAppState {
     private final EnumMap<Actions, Boolean> actions = new EnumMap<>(Actions.class);
     private final Maze maze = new Maze(31, 31);
     private Player player;
+    public final static Session session = new Session();
     
     private enum Actions {
         up, right, down, left, escape
@@ -96,6 +100,9 @@ public class Game extends AbstractAppState {
         app.getInputManager().addListener(actionListener, Actions.right.name());
         app.getInputManager().addListener(actionListener, Actions.down.name());
         app.getInputManager().addListener(actionListener, Actions.escape.name());
+        
+        session.setType("solo");
+        session.setTime(new Date(LocalDate.now().toEpochDay()));
     }
 
     @Override
@@ -108,6 +115,8 @@ public class Game extends AbstractAppState {
     @Override
     public void update(float tpf) {
         player.updateTime(tpf);
+        boolean timeToGo = false;
+        
         int dirX = 0, dirY = 0;
         
         if (player.isTime()) {
@@ -123,10 +132,16 @@ public class Game extends AbstractAppState {
             if (actions.get(Actions.left)) {
                 dirX--;
             }
-            player.Step(0, dirY);
-            player.Step(dirX, 0);
+            timeToGo = player.Step(0, dirY);
+            timeToGo = timeToGo || player.Step(dirX, 0);
         }
         cam.setLocation(player.getLocation());
+        
+        if (timeToGo)
+            // Write your code here
+            
+            // End your code here
+            mygame.Main.app.stop();
     }
     
     private final ActionListener actionListener = new ActionListener() {

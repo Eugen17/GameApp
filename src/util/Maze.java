@@ -10,7 +10,8 @@ public class Maze {
     private final ArrayList<Tile> content = new ArrayList();
     public final ArrayList<Geometry> geoms = new ArrayList();
     public Material lit;
-    private final int height, width, exitX, exitY;
+    private final int height, width;
+    public final int exitX, exitY;
     private boolean sealed = true;
     private int altars;
 

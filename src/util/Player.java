@@ -4,7 +4,10 @@ import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Quad;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.Random;
+import state.Game;
 
 public class Player {
 
@@ -44,15 +47,29 @@ public class Player {
             stepTime -= tpf;
     }
 
-    public void Step(int x, int y) {
+    public boolean Step(int x, int y) {
         stepTime = stepTimeThr;
         if (maze.getTile(this.x + x, this.y + y) == Tile.unlitAltar) {
             maze.Light(this.x + x, this.y + y);
+            return false;
         }
         if (maze.getTile(this.x + x, this.y + y) == Tile.pass) {
             this.x += x;
             this.y += y;
             geom.setLocalTranslation(this.x, this.y, 1);
+            return false;
         }
+        if (!maze.isSealed() && this.x+x == maze.exitX && this.y+y == maze.exitY){
+            try {
+            Game.session.setDuration(
+                    (int) new Date(LocalDate.now().toEpochDay())
+                            .getTime() - (int)Game.session.getDuration().longValue());
+            return true;
+            } catch(NullPointerException ex){
+            } finally {
+                return true;
+            }
+        }
+        return false;
     }
 }
