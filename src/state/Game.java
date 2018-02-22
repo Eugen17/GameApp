@@ -24,19 +24,18 @@ public class Game extends AbstractAppState {
     private final Node localNode = new Node("Game");
     private final Node pauseNode = new Node("Pause");
     private Camera cam;
-
-    private enum Actions {
-        up, right, down, left, escape
-    };
-    
     private final EnumMap<Actions, Boolean> actions = new EnumMap<>(Actions.class);
     private final Maze maze = new Maze(31, 31);
     private Player player;
     
+    private enum Actions {
+        up, right, down, left, escape
+    };
+    
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
-        
+         
         actions.put(Actions.up, false);
         actions.put(Actions.down, false);
         actions.put(Actions.right, false);
@@ -102,7 +101,7 @@ public class Game extends AbstractAppState {
     @Override
     public void cleanup() {
         rootNode.detachChild(localNode);
-
+        
         super.cleanup();
     }
 

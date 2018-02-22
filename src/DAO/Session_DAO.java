@@ -1,16 +1,23 @@
-import java.sql.*;
+package DAO;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ConnectionFactory {
+class ConnectionFactory {
     public static final String URL = "jdbc:mysql://localhost:3306/testdb";
     public static final String Session = "Session";
     public static final String Time = "Time";
 
     public static Connection getConnection() {
         try {
-            DriverManDurationr.registerDriver(new Driver());
-            return DriverManDurationr.getConnection(URL, Session, Time);
+            return DriverManager.getConnection(URL, Session, Time);
         } catch (SQLException ex) {
             throw new RuntimeException("Error connecting to the database", ex);
         }
@@ -18,6 +25,7 @@ public class ConnectionFactory {
 }
 
 public class Session_DAO {
+    
     private Session extractSessionFromResultSet(ResultSet rs) throws SQLException {
         Session Session = new Session();
         Session.setId( rs.getInt("id") );
@@ -28,7 +36,7 @@ public class Session_DAO {
     }
 
     public Session getSession(int id) {
-        Connection connection = connectionFactory.getConnection();
+        Connection connection = ConnectionFactory.getConnection();
         try {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM Session WHERE id=" + id);
@@ -43,8 +51,7 @@ public class Session_DAO {
     }
 
     public Session getSessionByTime(Date time) {
-        Connector connector = new Connector();
-        Connection connection = connector.getConnection();
+        Connection connection = ConnectionFactory.getConnection();
         try {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Session WHERE Time=?");
             ps.setDate(1, time);
@@ -60,8 +67,7 @@ public class Session_DAO {
     }
 
     public Set getAllSessions() {
-        Connector connector = new Connector();
-        Connection connection = connector.getConnection();
+        Connection connection = ConnectionFactory.getConnection();
         try {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM Session");
@@ -79,12 +85,11 @@ public class Session_DAO {
     }
 
     public boolean insertSession(Session Session) {
-        Connector connector = new Connector();
-        Connection connection = connector.getConnection();
+        Connection connection = ConnectionFactory.getConnection();
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO Session VALUES (NULL, ?, ?, ?)");
             ps.setString(1, Session.getType());
-            ps.setDate(2, java.sql.Date.valueOf(Session.getTime()));
+            ps.setDate(2, Date.valueOf(Session.getTime().toString()));
             ps.setInt(3, Session.getDuration());
             int i = ps.executeUpdate();
             if(i == 1) {
@@ -97,12 +102,11 @@ public class Session_DAO {
     }
 
     public boolean updateSession(Session Session) {
-        Connector connector = new Connector();
-        Connection connection = connector.getConnection();
+        Connection connection = ConnectionFactory.getConnection();
         try {
             PreparedStatement ps = connection.prepareStatement("UPDATE Session SET Type=?, Time=?, Duration=? WHERE id=?");
             ps.setString(1, Session.getType());
-            ps.setDate(2, java.sql.date.valueof(Session.getTime));
+            ps.setDate(2, Date.valueOf(Session.getTime().toString()));
             ps.setInt(3, Session.getDuration());
             ps.setInt(4, Session.getId());
             int i = ps.executeUpdate();
@@ -116,8 +120,7 @@ public class Session_DAO {
     }
 
     public boolean deleteSession(int id) {
-        Connector connector = new Connector();
-        Connection connection = connector.getConnection();
+        Connection connection = ConnectionFactory.getConnection();
         try {
             Statement stmt = connection.createStatement();
             int i = stmt.executeUpdate("DELETE FROM Session WHERE id=" + id);

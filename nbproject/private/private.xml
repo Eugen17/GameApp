@@ -3,9 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/D:/Maze/src/util/Button.java</file>
+            <file>file:/D:/Maze/src/state/MainMenu.java</file>
             <file>file:/D:/Maze/src/state/Game.java</file>
-            <file>file:/D:/Maze/src/util/Maze.java</file>
-            <file>file:/D:/Maze/src/util/Player.java</file>
+            <file>file:/D:/Maze/src/mygame/Main.java</file>
         </group>
     </open-files>
 </project-private>
