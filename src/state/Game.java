@@ -1,7 +1,6 @@
 package state;
 
 import com.jme3.app.Application;
-import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.input.KeyInput;
@@ -23,7 +22,6 @@ import java.time.LocalDate;
 
 public class Game extends AbstractAppState {
 
-    private Node rootNode;
     private final Node localNode = new Node("Game");
     private final Node pauseNode = new Node("Pause");
     private Camera cam;
@@ -40,15 +38,17 @@ public class Game extends AbstractAppState {
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
          
+        System.out.println("1");
+        
         actions.put(Actions.up, false);
         actions.put(Actions.down, false);
         actions.put(Actions.right, false);
         actions.put(Actions.left, false);
-        
-        rootNode = ((SimpleApplication)app).getRootNode();
+       
         cam = app.getCamera();
-
-        rootNode.attachChild(localNode);
+        mygame.Main.app.getRootNode().attachChild(localNode);
+        mygame.Main.app.getGuiNode().attachChild(pauseNode);
+        
 
         maze.Generate(20);
 
@@ -95,11 +95,9 @@ public class Game extends AbstractAppState {
         app.getInputManager().addMapping(Actions.right.name(), new KeyTrigger(KeyInput.KEY_D));
         app.getInputManager().addMapping(Actions.right.name(), new KeyTrigger(KeyInput.KEY_RIGHT));
         app.getInputManager().addMapping(Actions.escape.name(), new KeyTrigger(KeyInput.KEY_ESCAPE));
-        app.getInputManager().addListener(actionListener, Actions.left.name());
-        app.getInputManager().addListener(actionListener, Actions.up.name());
-        app.getInputManager().addListener(actionListener, Actions.right.name());
-        app.getInputManager().addListener(actionListener, Actions.down.name());
-        app.getInputManager().addListener(actionListener, Actions.escape.name());
+        app.getInputManager().addListener(actionListener, 
+                new String[]{Actions.left.name(), Actions.up.name(), Actions.right.name(), 
+                Actions.down.name(), Actions.escape.name()});
         
         session.setType("solo");
         session.setTime(new Date(LocalDate.now().toEpochDay()));
@@ -107,7 +105,8 @@ public class Game extends AbstractAppState {
 
     @Override
     public void cleanup() {
-        rootNode.detachChild(localNode);
+        mygame.Main.app.getRootNode().detachChild(localNode);
+        mygame.Main.app.getGuiNode().detachChild(pauseNode);
         
         super.cleanup();
     }

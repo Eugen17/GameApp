@@ -1,25 +1,26 @@
 package mygame;
 
 import com.jme3.app.SimpleApplication;
-import state.Game;
+import com.jme3.system.AppSettings;
 import state.MainMenu;
-import DAO.*;
 
 public class Main extends SimpleApplication {
 
-    public static Main app = new Main();
+    public final static Main app = new Main();
+    public AppSettings appSettings;
     
     public Main(){
-        super(new Game());
+        super(new MainMenu());
     }
     
-    public static void main(String[] args) {
+    public static void main(String[] args) {        
         app.setShowSettings(false);
         app.start();
     }
-
+    
     @Override
     public void simpleInitApp() {
-        Game game = new Game();
+        appSettings = this.settings;
+        MainMenu game = new MainMenu();
     }
 }
