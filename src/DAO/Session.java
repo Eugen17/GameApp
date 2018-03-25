@@ -1,47 +1,60 @@
 package DAO;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Session {
+
     private Integer id;
     private String type;
-    private Date time;
-    private Integer duration;
+    private long duration;
+    private long pauseTime;
+
     public Session() {
     }
-    public Session(String type, Date time, Integer duration) {
+
+    public Session(String type, Date time) {
         this.type = type;
-        this.time = time;
-        this.duration = duration;
     }
-    public Session(Integer id, String type, Date time, Integer duration) {
+
+    public Session(Integer id, String type) {
         this.id = id;
         this.type = type;
-        this.time = time;
-        this.duration = duration;
     }
-    public Integer getDuration() {
+
+    public long getDuration() {
         return duration;
     }
-    public void setDuration(Integer duration) {
+
+    public void setDuration(long duration) {
         this.duration = duration;
     }
+
     public Integer getId() {
         return id;
     }
+
     public void setId(Integer id) {
         this.id = id;
     }
+
     public String getType() {
         return type;
     }
+
     public void setType(String type) {
         this.type = type;
     }
-    public Date getTime() {
-        return time;
+
+    public long getPauseTime(){
+        return pauseTime;
     }
-    public void setTime(Date time) {
-        this.time = time;
+    
+    public void StartPause() {
+        pauseTime = new Date(LocalDate.now().toEpochDay()).getTime();
+    }
+    
+    public void EndPause() {
+        duration -= pauseTime;
     }
 }

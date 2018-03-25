@@ -44,6 +44,7 @@ public class MainMenu extends AbstractAppState {
             @Override
             public void accept(Integer t) {
                 cleanup();
+                Main.app.getStateManager().detach(Main.app.getStateManager().getState(MainMenu.class));
                 Main.app.getStateManager().attach(new Game());
             }
             }));

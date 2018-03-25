@@ -59,17 +59,6 @@ public class Player {
             geom.setLocalTranslation(this.x, this.y, 1);
             return false;
         }
-        if (!maze.isSealed() && this.x+x == maze.exitX && this.y+y == maze.exitY){
-            try {
-            Game.session.setDuration(
-                    (int) new Date(LocalDate.now().toEpochDay())
-                            .getTime() - (int)Game.session.getDuration().longValue());
-            return true;
-            } catch(NullPointerException ex){
-            } finally {
-                return true;
-            }
-        }
-        return false;
+        return !maze.isSealed() && this.x+x == maze.exitX && this.y+y == maze.exitY;
     }
 }
