@@ -1,5 +1,6 @@
 package state;
 
+import DAO.*;
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
@@ -12,13 +13,12 @@ import com.jme3.renderer.Camera;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Quad;
-import java.util.EnumMap;
 import util.Maze;
 import util.Player;
 import util.Tile;
-import DAO.Session;
 import com.jme3.font.BitmapText;
 import java.util.Date;
+import java.util.EnumMap;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import mygame.Main;
@@ -30,7 +30,7 @@ public class Game extends AbstractAppState {
     private final EnumMap<Actions, Boolean> actions = new EnumMap<>(Actions.class);
     private final Maze maze = new Maze(31, 31);
     private Player player;
-    public final static Session session = new Session();
+    public final static Session session = new Session("");
     private final BitmapText pauseText = 
             new BitmapText(Main.app.getAssetManager().loadFont("Interface/Fonts/Default.fnt"));
     
@@ -160,7 +160,10 @@ public class Game extends AbstractAppState {
                         - Game.session.getDuration());
                 // Write your code here
                 // session is set and done, just transfer to DB
-
+                
+                SessionDAO dao = new DAOFactory().getSessionDAO();
+                dao.insertSession(session);
+                
                 // End your code here
                 System.out.println(Game.session.getDuration());
                 cleanup();

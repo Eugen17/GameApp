@@ -2,27 +2,39 @@ package DAO;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.UUID;
 
 public class Session {
 
-    private Integer id;
+    private UUID id;
     private String type;
-    private long duration;
-    private long pauseTime;
+    private Long duration;
+    private Long pauseTime;
 
-    public Session() {
+    @Override
+    public String toString() {
+        return "Session{" +
+                "id=" + id +
+                ", type='" + type + '\'' +
+                ", duration=" + duration +
+                '}';
     }
 
-    public Session(String type, Date time) {
+    public Session(){
+    }
+    
+    public Session(String type) {
         this.type = type;
+        this.id = UUID.randomUUID();
     }
-
-    public Session(Integer id, String type) {
+    
+    public Session(UUID id, String type, Long duration){
         this.id = id;
         this.type = type;
+        this.duration = duration;
     }
 
-    public long getDuration() {
+    public Long getDuration() {
         return duration;
     }
 
@@ -30,11 +42,11 @@ public class Session {
         this.duration = duration;
     }
 
-    public Integer getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -46,7 +58,7 @@ public class Session {
         this.type = type;
     }
 
-    public long getPauseTime(){
+    public Long getPauseTime(){
         return pauseTime;
     }
     
