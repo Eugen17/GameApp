@@ -1,13 +1,31 @@
 apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
 
 allprojects{
     repositories {
         jcenter()
         maven { url "https://jitpack.io" }
+		mavenCentral()
     }
 }
 
 dependencies {
-	compile 'com.github.jMonkeyEngine:jmonkeyengine:v3.2.1-stable'
-    compile 'mysql:mysql-connector-java'
+	compile('org.springframework.boot:spring-boot-starter-security')
+	runtime('mysql:mysql-connector-java')
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+	testCompile('org.springframework.security:spring-security-test')
+}
+
+
+buildscript {
+	ext {
+		springBootVersion = '2.0.1.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
 }

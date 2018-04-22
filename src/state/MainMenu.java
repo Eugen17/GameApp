@@ -6,15 +6,14 @@ import com.jme3.app.state.AppStateManager;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
-import com.jme3.material.Material;
-import com.jme3.math.ColorRGBA;
 import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
-import com.jme3.renderer.RenderManager;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.function.Consumer;
 import util.Button;
 import mygame.Main;
+import util.GenericTab;
 
 public class MainMenu extends AbstractAppState {
     
@@ -22,6 +21,7 @@ public class MainMenu extends AbstractAppState {
     
     private enum Actions {up, down, left, right, click};
     private boolean isPressed = false;
+    private final HashMap<String, GenericTab> elements = new HashMap<>();
     
     @Override
     public void initialize(AppStateManager stateManager, Application app){
@@ -29,17 +29,7 @@ public class MainMenu extends AbstractAppState {
         
         int width = Main.app.appSettings.getWidth(), height = Main.app.appSettings.getHeight();
         
-        Material basic = new Material(app.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-        basic.setColor("Color", ColorRGBA.White);
-
-        Material hover = new Material(app.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-        hover.setColor("Color", ColorRGBA.LightGray);
-
-        Material click = new Material(app.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-        click.setColor("Color", ColorRGBA.Gray);
-        
-        buttons.add(new Button(width/3, height*0.65f, width/3, height*0.08f, "Start game", 
-            app.getAssetManager().loadFont("Interface/Fonts/Default.fnt"),
+        elements.put("Start", new Button(width/3, height*0.65f, width/3, height*0.08f, "Start game", 
             new Consumer<Integer>(){
             @Override
             public void accept(Integer t) {
@@ -49,8 +39,7 @@ public class MainMenu extends AbstractAppState {
             }
             }));
         
-        buttons.add(new Button(width/3, height*0.55f, width/3, height*0.08f, "Results", 
-            app.getAssetManager().loadFont("Interface/Fonts/Default.fnt"),
+        elements.put("Results", new Button(width/3, height*0.55f, width/3, height*0.08f, "Results", 
             new Consumer<Integer>(){
             @Override
             public void accept(Integer t) {
@@ -58,8 +47,7 @@ public class MainMenu extends AbstractAppState {
             }
             }));
         
-        buttons.add(new Button(width/3, height*0.45f, width/3, height*0.08f, "Quit", 
-            app.getAssetManager().loadFont("Interface/Fonts/Default.fnt"),
+        elements.put("Quit", new Button(width/3, height*0.45f, width/3, height*0.08f, "Quit", 
             new Consumer<Integer>(){
             @Override
             public void accept(Integer t) {
@@ -67,10 +55,7 @@ public class MainMenu extends AbstractAppState {
             }
             }));
         
-        for (Button button : buttons) {
-            button.setMaterial(basic, hover, click);
-            button.initialize(Main.app.getGuiNode());
-        }
+        MenuInit();
         
         app.getInputManager().clearMappings();
         app.getInputManager().addMapping(Actions.up.name(), new MouseAxisTrigger(MouseInput.AXIS_Y, false));
@@ -94,14 +79,21 @@ public class MainMenu extends AbstractAppState {
     }
     
     @Override
-    public void render(RenderManager rm){
-        
-    }
-    
-    @Override
     public void update(float dt){
         for (Button b : buttons)
             b.updateMaterial();
+    }
+    
+    private void MenuInit(){
+        for (Button b : buttons)
+            b.cleanup(Main.app.getGuiNode());
+        buttons.clear();
+        
+        buttons.add((Button)elements.get("Start"));
+        buttons.add((Button)elements.get("Results"));
+        buttons.add((Button)elements.get("Quit"));
+        for (Button b : buttons)
+            b.initialize(Main.app.getGuiNode());
     }
     
     private final ActionListener actionListener = new ActionListener(){
