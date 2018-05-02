@@ -10,18 +10,20 @@ import com.jme3.scene.shape.Quad;
 import static java.lang.Math.abs;
 import mygame.Main;
 
-public class GenericTab {
+public class Label {
     protected final float x, y, w, h;
+    protected String t;
     protected final Quad quad;
     protected final Geometry geom;
     protected final BitmapText text;
     public Material basic, hover, click, current;
     
-    public GenericTab(float x, float y, float w, float h, String t){
+    public Label(float x, float y, float w, float h, String t){
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
+        this.t = t;
         text = new BitmapText(Main.app.getAssetManager().loadFont("Interface/Fonts/Default.fnt"));
         text.setText(t);
         text.setColor(ColorRGBA.Black);
@@ -35,11 +37,11 @@ public class GenericTab {
         geom.setLocalTranslation(abs(x), abs(y), 0);
         
         basic = new Material(Main.app.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-        basic.setColor("Color", ColorRGBA.White);
+        basic.setColor("Color", ColorRGBA.LightGray);
         hover = new Material(Main.app.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-        hover.setColor("Color", ColorRGBA.LightGray);
+        hover.setColor("Color", ColorRGBA.Gray);
         click = new Material(Main.app.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-        click.setColor("Color", ColorRGBA.Gray);
+        click.setColor("Color", ColorRGBA.DarkGray);
         current = basic;
         geom.setMaterial(current);
     }
@@ -56,5 +58,9 @@ public class GenericTab {
     
     public boolean isHovered(Vector2f vec){
         return ((vec.x > this.x) && (vec.x < this.x + w) && (vec.y > this.y) && (vec.y < this.y + h));
+    }
+    
+    public void updateMaterial(){
+        geom.setMaterial(current);
     }
 }
