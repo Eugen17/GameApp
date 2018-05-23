@@ -5,6 +5,7 @@ import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.input.MouseInput;
+import java.sql.DriverManager;
 import com.jme3.input.RawInputListener;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
@@ -39,7 +40,7 @@ public class MainMenu extends AbstractAppState {
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
         
-        new DAOFactory();
+        DAOFactory D=new DAOFactory();
 
         int width = Main.app.appSettings.getWidth(), height = Main.app.appSettings.getHeight();
 

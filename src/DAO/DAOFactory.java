@@ -4,7 +4,7 @@ import java.sql.*;
 
 public class DAOFactory {
 
-    public static final String URL = "jdbc:mysql://localhost:3306/Data?useSSL=false";
+    public static final String URL = "jdbc:mysql://localhost:3306/Data?useSSL=false&serverTimezone=UTC";
     
     public DAOFactory() {
         createConnection();

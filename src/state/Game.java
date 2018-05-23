@@ -168,8 +168,8 @@ public class Game extends AbstractAppState {
                 // Write your code here
                 // session is set and done, just transfer to DB
                 
-                //SessionDAO dao = new DAOFactory().getSessionDAO();
-                //dao.insertSession(session);
+                SessionDAO dao = new DAOFactory().getSessionDAO();
+                dao.insertSession(session);
                 
                 // End your code here
                 System.out.println(Game.session.getDuration());
